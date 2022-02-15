@@ -13,8 +13,8 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        private AppDbContext _filmeContext;
-        private IMapper _mapper;
+        private readonly AppDbContext _filmeContext;
+        private readonly IMapper _mapper;
 
         public FilmeController(AppDbContext filmeContext, IMapper mapper)
         {
@@ -31,7 +31,7 @@ namespace FilmesAPI.Controllers
             _filmeContext.Filmes.Add(filme);
             _filmeContext.SaveChanges();
             // this method below return the location of resources
-            return CreatedAtAction(nameof(RecuperarFilmePorId), new { Id = filme.Id }, filme);
+            return CreatedAtAction(nameof(RecuperarFilmePorId), new { filme.Id }, filme);
         }
 
         [HttpGet]
@@ -44,12 +44,13 @@ namespace FilmesAPI.Controllers
         public IActionResult RecuperarFilmePorId(int id)
         {
             Filme filme = _filmeContext.Filmes.FirstOrDefault(Filme => Filme.Id == id);
-            if(filme != null)
+            if(filme == null)
             {
-                FilmeDto filmeDto = _mapper.Map<FilmeDto>(filme);
-                return Ok(filmeDto);
+                return NotFound();
             }
-            return NotFound();
+
+            FilmeDto filmeDto = _mapper.Map<FilmeDto>(filme);
+            return Ok(filmeDto);
         }
 
         [HttpPut("{id}")]

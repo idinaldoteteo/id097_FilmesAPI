@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using FilmesAPI.Data;
+using FilmesAPI.Dto;
+using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using System.Linq;
 
 namespace FilmesAPI.Controllers
 {
@@ -19,9 +22,62 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable RecuperarFilmes()
+        public IEnumerable RecuperarCinemas()
         {
             return _cinemaContext.Cinemas;
+        }
+
+        [HttpPost]
+        public IActionResult AdicionarCinema([FromBody] CinemaDto cinemaDto)
+        {
+            Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
+            _cinemaContext.Cinemas.Add(cinema);
+            _cinemaContext.SaveChanges();
+
+            return CreatedAtAction(nameof(RecuperarCinemaById), new { Id = cinema.Id }, cinema);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult RecuperarCinemaById(int id)
+        {
+            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(Cinema => Cinema.Id == id);
+            if( cinema == null)
+            {
+                return NotFound();
+            }
+
+            CinemaDto cinemaDto = _mapper.Map<CinemaDto>(cinema);
+            return Ok(cinemaDto);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult AtualizarCinema(int id, [FromBody] CinemaDto cinemaDto)
+        {
+            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
+            if( cinema == null)
+            {
+                return NotFound();
+
+            }
+
+            _mapper.Map(cinemaDto, cinema);
+            _cinemaContext.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarCinema(int id)
+        {
+            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(Cinema => Cinema.Id == id);
+            if( cinema == null)
+            {
+                return NotFound();
+            }
+
+            _cinemaContext.Remove(cinema);
+            _cinemaContext.SaveChanges();
+            return NoContent();
         }
     }
 }

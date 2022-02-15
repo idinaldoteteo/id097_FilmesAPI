@@ -8,7 +8,7 @@ namespace FilmesAPI.Models
         [Key]
         [Required]
         public int Id { get; internal set; }
-        [Required]
+        [Required(ErrorMessage = "O campo Título não pode ser vazio")]
         public string Titulo { get; set; }
         [Required]
         public string Diretor { get; set; }

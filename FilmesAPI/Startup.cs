@@ -28,9 +28,10 @@ namespace FilmesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddDbContext<AppDbContext>(opt => opt.UseMySQL(Configuration.GetConnectionString("FilmeConnection")))
-                .AddDbContext<AppDbContext>(opt => opt.UseMySQL(Configuration.GetConnectionString("CinemaConnection")));
+            services.AddDbContext<AppDbContext>(opt => opt.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("FilmeConnection")));
+            services.AddDbContext<AppDbContext>(opt => opt.UseLazyLoadingProxies().UseMySQL(Configuration.GetConnectionString("CinemaConnection")));
+            services.AddDbContext<AppDbContext>(opt => opt.UseMySQL(Configuration.GetConnectionString("EnderecoConnection")));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
