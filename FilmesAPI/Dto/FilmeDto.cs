@@ -15,5 +15,6 @@ namespace FilmesAPI.Dto
         public int Duracao { get; set; }
         [StringLength(30)]
         public string Genero { get; set; }
+        public int ClassificacaoEtaria { get; set; }
     }
 }
