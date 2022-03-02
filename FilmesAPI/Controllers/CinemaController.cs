@@ -4,6 +4,7 @@ using FilmesAPI.Dto;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FilmesAPI.Controllers
@@ -22,9 +23,26 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable RecuperarCinemas()
+        public IActionResult RecuperarCinemas([FromQuery] string nomeDoFilme)
         {
-            return _cinemaContext.Cinemas;
+            List<Cinema> cinemas = _cinemaContext.Cinemas.ToList();
+            if( cinemas.Count == 0)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrEmpty(nomeDoFilme))
+            {
+                IEnumerable<Cinema> query = from cinema in cinemas
+                                            where cinema.Sessoes.Any(
+                                                sessao => sessao.Filme.Titulo.Equals(nomeDoFilme))
+                                            select cinema;
+                cinemas = query.ToList();
+            }
+
+            List<CinemaDto> cinemaDtoList = _mapper.Map<List<CinemaDto>>(cinemas);
+
+            return Ok(cinemaDtoList);
         }
 
         [HttpPost]
