@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,76 +11,61 @@ using System.Linq;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CinemaController : ControllerBase
     {
-        private AppDbContext _cinemaContext;
-        private IMapper _mapper;
+        private readonly ICinemaService _cinemaService;
 
-        public CinemaController(AppDbContext cinemaContext, IMapper autoMapper)
+        public CinemaController(ICinemaService cinemaService)
         {
-            this._cinemaContext = cinemaContext;
-            this._mapper = autoMapper;
+            this._cinemaService = cinemaService;
         }
 
         [HttpGet]
         public IActionResult RecuperarCinemas([FromQuery] string nomeDoFilme)
         {
-            List<Cinema> cinemas = _cinemaContext.Cinemas.ToList();
-            if( cinemas.Count == 0)
+            List<CinemaDto> cinemasList = _cinemaService.RecuperarCinemas(nomeDoFilme);
+
+            if (!cinemasList.Any())
             {
                 return NotFound();
             }
 
-            if (!string.IsNullOrEmpty(nomeDoFilme))
-            {
-                IEnumerable<Cinema> query = from cinema in cinemas
-                                            where cinema.Sessoes.Any(
-                                                sessao => sessao.Filme.Titulo.Equals(nomeDoFilme))
-                                            select cinema;
-                cinemas = query.ToList();
-            }
-
-            List<CinemaDto> cinemaDtoList = _mapper.Map<List<CinemaDto>>(cinemas);
-
-            return Ok(cinemaDtoList);
+            return Ok(cinemasList);
         }
 
         [HttpPost]
         public IActionResult AdicionarCinema([FromBody] CinemaDto cinemaDto)
         {
-            Cinema cinema = _mapper.Map<Cinema>(cinemaDto);
-            _cinemaContext.Cinemas.Add(cinema);
-            _cinemaContext.SaveChanges();
+            CinemaDto cinemaDtoReturn = _cinemaService.AdicionarCinema(cinemaDto);
 
-            return CreatedAtAction(nameof(RecuperarCinemaById), new { Id = cinema.Id }, cinema);
+            return CreatedAtAction(nameof(RecuperarCinemaById), new { Id = cinemaDtoReturn.Id }, cinemaDtoReturn);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarCinemaById(int id)
         {
-            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(Cinema => Cinema.Id == id);
-            if( cinema == null)
+            CinemaDto cinemaDto = _cinemaService.RecuperarCinemaById(id);
+
+            if (cinemaDto == null)
             {
                 return NotFound();
+
             }
 
-            CinemaDto cinemaDto = _mapper.Map<CinemaDto>(cinema);
             return Ok(cinemaDto);
         }
 
         [HttpPut("{id}")]
         public IActionResult AtualizarCinema(int id, [FromBody] CinemaDto cinemaDto)
         {
-            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
-            if( cinema == null)
+            CinemaDto cinemaDtoReturn = _cinemaService.AtualizarCinema(id, cinemaDto);
+            
+            if (cinemaDtoReturn == null)
             {
                 return NotFound();
 
             }
-
-            _mapper.Map(cinemaDto, cinema);
-            _cinemaContext.SaveChanges();
 
             return NoContent();
         }
@@ -87,14 +73,14 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarCinema(int id)
         {
-            Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(Cinema => Cinema.Id == id);
-            if( cinema == null)
+            CinemaDto cinemaDto = _cinemaService.DeletarCinema(id);
+
+            if (cinemaDto == null)
             {
                 return NotFound();
+
             }
 
-            _cinemaContext.Remove(cinema);
-            _cinemaContext.SaveChanges();
             return NoContent();
         }
     }

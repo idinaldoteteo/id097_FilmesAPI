@@ -2,6 +2,7 @@
 using FilmesAPI.Controllers;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using System.Collections.Generic;
 
 namespace FilmesAPI.Profilies
 {
@@ -11,6 +12,7 @@ namespace FilmesAPI.Profilies
         {
             CreateMap<EnderecoDto, Endereco>();
             CreateMap<Endereco, EnderecoDto>();
+            CreateMap<List<EnderecoDto>, List<Endereco>>();
         }
     }
 }

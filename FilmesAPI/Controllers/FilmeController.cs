@@ -11,7 +11,7 @@ using System.Linq;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FilmeController : ControllerBase
     {
         private readonly IFilmeService _filmeService;
@@ -35,7 +35,7 @@ namespace FilmesAPI.Controllers
         {
             List<FilmeDto> filmeDto = _filmeService.RecupearFilmes(classificacaoEtaria);
             
-            if(filmeDto.Count() == 0)
+            if(!filmeDto.Any())
             {
                 return NotFound();
             }
