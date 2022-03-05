@@ -12,10 +12,6 @@ namespace FilmesAPI.Services
         private readonly AppDbContext _filmeContext;
         private readonly IMapper _mapper;
 
-        public FilmeService()
-        {
-        }
-
         public FilmeService(AppDbContext filmeContext, IMapper mapper)
         {
             _filmeContext = filmeContext;

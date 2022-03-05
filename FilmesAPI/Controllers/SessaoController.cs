@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,42 +14,37 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-        private readonly AppDbContext _contextSessao;
-        private readonly IMapper _mapper;
+        private readonly ISessaoService _sessaoService;
 
-        public SessaoController(AppDbContext contextSessao, IMapper mapper)
+        public SessaoController(ISessaoService sessaoService)
         {
-            this._contextSessao = contextSessao;
-            this._mapper = mapper;
+            this._sessaoService = sessaoService;
         }
 
         [HttpGet]
-        public IEnumerable<Sessao> RecuperarSessos()
+        public List<SessaoDto> RecuperarSessoes()
         {
-            return _contextSessao.Sessoes;
+            return _sessaoService.RecuperarSessoes();
         }
 
         [HttpPost]
         public IActionResult AdicionarSessao([FromBody] SessaoDto sessaoDto)
         {
-            Sessao sessao = _mapper.Map<Sessao>(sessaoDto);
+            SessaoDto sessaoDtoReturn = _sessaoService.AdicionarSessao(sessaoDto);
 
-            _contextSessao.Sessoes.Add(sessao);
-            _contextSessao.SaveChanges();
-
-            return CreatedAtAction(nameof(RecuperarSessaoPorId), new { sessao.Id }, sessao);
+            return CreatedAtAction(nameof(RecuperarSessaoPorId), new { sessaoDtoReturn.Id }, sessaoDtoReturn);
         }
 
         [HttpGet("{id}")]
         public IActionResult RecuperarSessaoPorId(int id)
         {
-            Sessao sessao = _contextSessao.Sessoes.FirstOrDefault(Sessao => Sessao.Id == id);
-            if(sessao == null)
+            SessaoDto sessaoDto = _sessaoService.RecuperarSessaoPorId(id);
+            
+            if(sessaoDto == null)
             {
                 return NotFound();
             }
 
-            SessaoDto sessaoDto = _mapper.Map<SessaoDto>(sessao);
             return Ok(sessaoDto);
         }
     }

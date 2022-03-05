@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class EnderecoController : ControllerBase
     {
         private readonly IEnderecoService _enderecoService;
