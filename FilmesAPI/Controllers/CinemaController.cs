@@ -11,7 +11,7 @@ using System.Linq;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CinemaController : ControllerBase
     {
         private readonly ICinemaService _cinemaService;

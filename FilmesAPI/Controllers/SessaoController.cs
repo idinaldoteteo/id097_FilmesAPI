@@ -22,9 +22,16 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public List<SessaoDto> RecuperarSessoes()
+        public IActionResult RecuperarSessoes()
         {
-            return _sessaoService.RecuperarSessoes();
+            List<SessaoDto> sessaoDtoList = _sessaoService.RecuperarSessoes();
+
+            if (!sessaoDtoList.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(sessaoDtoList);
         }
 
         [HttpPost]

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace FilmesAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class EnderecoController : ControllerBase
     {
         private readonly IEnderecoService _enderecoService;
@@ -44,9 +44,16 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public List<EnderecoDto> RecuperarEnderecos()
+        public IActionResult RecuperarEnderecos()
         {
-            return _enderecoService.RecuperarEnderecos();
+            List<EnderecoDto> enderecoDtoList = _enderecoService.RecuperarEnderecos();
+
+            if (!enderecoDtoList.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(enderecoDtoList);
         }
 
         [HttpPut("{id}")]

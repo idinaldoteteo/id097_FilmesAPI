@@ -43,9 +43,16 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public List<GerenteDto> RecuperarGerentes()
+        public IActionResult RecuperarGerentes()
         {
-            return _gerenteService.RecuperarGerentes();
+            List<GerenteDto> gerenteDtoList = _gerenteService.RecuperarGerentes();
+
+            if (!gerenteDtoList.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(gerenteDtoList);
         }
 
         [HttpPut("{id}")]

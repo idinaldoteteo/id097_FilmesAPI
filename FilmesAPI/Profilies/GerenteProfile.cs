@@ -11,7 +11,6 @@ namespace FilmesAPI.Profilies
         public GerenteProfile()
         {
             CreateMap<GerenteDto, Gerente>();
-            CreateMap<List<Gerente>, List<GerenteDto>>();
             CreateMap<Gerente, GerenteDto>()
                 .ForMember(gerente => gerente.Cinemas, 
                 opts => opts.MapFrom(gerente => gerente.Cinemas.Select
