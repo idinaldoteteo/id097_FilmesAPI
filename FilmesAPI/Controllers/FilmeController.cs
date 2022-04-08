@@ -3,6 +3,7 @@ using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
 using FilmesAPI.Services;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -59,8 +60,8 @@ namespace FilmesAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult AtualizarFilme(int id, [FromBody] FilmeDto filmeDto)
         {
-            FilmeDto filmeDtoReturn = _filmeService.AtualizarFilme(id, filmeDto);
-            if( filmeDtoReturn == null)
+            Result result = _filmeService.AtualizarFilme(id, filmeDto);
+            if( result.IsFailed)
             {
                 return NotFound();
             }
@@ -71,8 +72,8 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarFilme(int id)
         {
-            FilmeDto filmeDto = _filmeService.DeletarFilme(id);
-            if( filmeDto == null)
+            Result result = _filmeService.DeletarFilme(id);
+            if( result.IsFailed)
             {
                 return NotFound();
             }

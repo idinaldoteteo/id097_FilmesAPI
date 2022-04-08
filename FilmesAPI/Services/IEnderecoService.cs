@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Dto;
+using FluentResults;
 using System.Collections.Generic;
 
 namespace FilmesAPI.Services
@@ -8,7 +9,7 @@ namespace FilmesAPI.Services
         List<EnderecoDto> RecuperarEnderecos();
         EnderecoDto AdicionarEndereco(EnderecoDto enderecoDto);
         EnderecoDto RecuperarEnderecoById(int id);
-        EnderecoDto AtualizarEndereco(int id, EnderecoDto enderecoDto);
-        EnderecoDto DeletarEndereco(int id);
+        Result AtualizarEndereco(int id, EnderecoDto enderecoDto);
+        Result DeletarEndereco(int id);
     }
 }

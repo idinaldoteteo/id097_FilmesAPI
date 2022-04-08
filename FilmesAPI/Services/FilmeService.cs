@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,32 +29,32 @@ namespace FilmesAPI.Services
             return _mapper.Map<FilmeDto>(filme);
         }
 
-        public FilmeDto AtualizarFilme(int id, FilmeDto filmeDto)
+        public Result AtualizarFilme(int id, FilmeDto filmeDto)
         {
             Filme filme = _filmeContext.Filmes.FirstOrDefault(filmeDto => filmeDto.Id == id);
             if (filme == null)
             {
-                return null;
+                return Result.Fail("Filme não encontrado.");
             }
 
             _mapper.Map(filmeDto, filme);
             _filmeContext.SaveChanges();
 
-            return _mapper.Map<FilmeDto>(filme);
+            return Result.Ok();
         }
 
-        public FilmeDto DeletarFilme(int id)
+        public Result DeletarFilme(int id)
         {
             Filme filme = _filmeContext.Filmes.FirstOrDefault(filme => filme.Id == id);
             if (filme == null)
             {
-                return null;
+                return Result.Fail("Filment não encontrado");
             }
 
             _filmeContext.Remove(filme);
             _filmeContext.SaveChanges();
 
-            return _mapper.Map<FilmeDto>(filme);
+            return Result.Ok();
         }
 
         public List<FilmeDto> RecupearFilmes(int? classificacaoEtaria)

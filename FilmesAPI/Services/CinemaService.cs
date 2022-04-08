@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,33 +28,33 @@ namespace FilmesAPI.Services
             return _mapper.Map<CinemaDto>(cinema);
         }
 
-        public CinemaDto AtualizarCinema(int id, CinemaDto cinemaDto)
+        public Result AtualizarCinema(int id, CinemaDto cinemaDto)
         {
             Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(cinema => cinema.Id == id);
             if (cinema == null)
             {
-                return null;
+                return Result.Fail("Cinema não encontrado.");
             }
 
             _mapper.Map(cinemaDto, cinema);
             _cinemaContext.SaveChanges();
 
-            return _mapper.Map<CinemaDto>(cinema);
+            return Result.Ok();
         }
 
-        public CinemaDto DeletarCinema(int id)
+        public Result DeletarCinema(int id)
         {
             Cinema cinema = _cinemaContext.Cinemas.FirstOrDefault(Cinema => Cinema.Id == id);
             
             if (cinema == null)
             {
-                return null;
+                return Result.Fail("Cinema não encontrado.");
             }
 
             _cinemaContext.Remove(cinema);
             _cinemaContext.SaveChanges();
 
-            return _mapper.Map<CinemaDto>(cinema);
+            return Result.Ok();
         }
 
         public CinemaDto RecuperarCinemaById(int id)

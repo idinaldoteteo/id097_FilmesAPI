@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,33 +28,33 @@ namespace FilmesAPI.Services
             return _mapper.Map<EnderecoDto>(endereco);
         }
 
-        public EnderecoDto AtualizarEndereco(int id, EnderecoDto enderecoDto)
+        public Result AtualizarEndereco(int id, EnderecoDto enderecoDto)
         {
             Endereco endereco = _enderecoContext.Enderecos.FirstOrDefault(enderecoDto => enderecoDto.Id == id);
             if (endereco == null)
             {
-                return null;
+                return Result.Fail("Endereço não encontrado.");
             }
 
             _mapper.Map(enderecoDto, endereco);
             _enderecoContext.SaveChanges();
 
-            return _mapper.Map<EnderecoDto>(endereco);
+            return Result.Ok();
         }
 
-        public EnderecoDto DeletarEndereco(int id)
+        public Result DeletarEndereco(int id)
         {
             Endereco endereco = _enderecoContext.Enderecos.FirstOrDefault(Endereco => Endereco.Id == id);
 
             if (endereco == null)
             {
-                return null;
+                return Result.Fail("Endereço não encontrado.");
             }
 
             _enderecoContext.Remove(endereco);
             _enderecoContext.SaveChanges();
 
-            return _mapper.Map<EnderecoDto>(endereco);
+            return Result.Ok();
         }
 
         public EnderecoDto RecuperarEnderecoById(int id)

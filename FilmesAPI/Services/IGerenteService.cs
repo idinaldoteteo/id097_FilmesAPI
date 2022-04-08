@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Dto;
+using FluentResults;
 using System.Collections.Generic;
 
 namespace FilmesAPI.Services
@@ -8,7 +9,7 @@ namespace FilmesAPI.Services
         List<GerenteDto> RecuperarGerentes();
         GerenteDto AdicionarGerente(GerenteDto gerenteDto);
         GerenteDto RecuperarGerenteById(int id);
-        GerenteDto AtualizarGerente(int id, GerenteDto gerenteDto);
-        GerenteDto DeletarGerente(int id);
+        Result AtualizarGerente(int id, GerenteDto gerenteDto);
+        Result DeletarGerente(int id);
     }
 }

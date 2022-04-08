@@ -1,5 +1,6 @@
 ﻿using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FluentResults;
 using System.Collections.Generic;
 
 namespace FilmesAPI.Services
@@ -9,7 +10,7 @@ namespace FilmesAPI.Services
         List<CinemaDto> RecuperarCinemas(string nomeDoFilme);
         CinemaDto AdicionarCinema(CinemaDto cinemaDto);
         CinemaDto RecuperarCinemaById(int id);
-        CinemaDto AtualizarCinema(int id, CinemaDto cinemaDto);
-        CinemaDto DeletarCinema(int id);
+        Result AtualizarCinema(int id, CinemaDto cinemaDto);
+        Result DeletarCinema(int id);
     }
 }

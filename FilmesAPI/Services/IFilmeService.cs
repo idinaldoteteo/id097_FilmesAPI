@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Dto;
+using FluentResults;
 using System.Collections.Generic;
 
 namespace FilmesAPI.Services
@@ -8,7 +9,7 @@ namespace FilmesAPI.Services
         FilmeDto AdicionarFilme(FilmeDto filmeDto);
         List<FilmeDto> RecupearFilmes(int? classificacaoEtaria);
         FilmeDto RecuperarFilmePorId(int id);
-        FilmeDto AtualizarFilme(int id, FilmeDto filmeDto);
-        FilmeDto DeletarFilme(int id);
+        Result AtualizarFilme(int id, FilmeDto filmeDto);
+        Result DeletarFilme(int id);
     }
 }

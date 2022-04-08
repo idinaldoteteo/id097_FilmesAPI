@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Dto;
 using FilmesAPI.Models;
+using FluentResults;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,32 +29,32 @@ namespace FilmesAPI.Services
             return _mapper.Map<GerenteDto>(gerente);
         }
 
-        public GerenteDto AtualizarGerente(int id, GerenteDto gerenteDto)
+        public Result AtualizarGerente(int id, GerenteDto gerenteDto)
         {
             Gerente gerente = _contextGerente.Gerentes.FirstOrDefault(gerenteDto => gerenteDto.Id == id);
             if (gerente == null)
             {
-                return null;
+                return Result.Fail("Gerente não encontrado.");
             }
 
             _mapper.Map(gerenteDto, gerente);
             _contextGerente.SaveChanges();
 
-            return _mapper.Map<GerenteDto>(gerente);
+            return Result.Ok();
         }
 
-        public GerenteDto DeletarGerente(int id)
+        public Result DeletarGerente(int id)
         {
             Gerente gerente = _contextGerente.Gerentes.FirstOrDefault(gerente => gerente.Id == id);
             if (gerente == null)
             {
-                return null;
+                return Result.Fail("Gerente não encontrado.");
             }
 
             _contextGerente.Remove(gerente);
             _contextGerente.SaveChanges();
 
-            return _mapper.Map<GerenteDto>(gerente);
+            return Result.Ok();
         }
 
         public GerenteDto RecuperarGerenteById(int id)

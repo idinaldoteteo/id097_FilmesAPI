@@ -8,6 +8,7 @@ using FilmesAPI.Dto;
 using System.Collections;
 using FilmesAPI.Services;
 using System.Collections.Generic;
+using FluentResults;
 
 namespace FilmesAPI.Controllers
 {
@@ -59,9 +60,9 @@ namespace FilmesAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult AtualizarEndereco(int id, [FromBody] EnderecoDto enderecoDto)
         {
-            EnderecoDto enderecoDtoReturn = _enderecoService.AtualizarEndereco(id, enderecoDto);
+            Result result = _enderecoService.AtualizarEndereco(id, enderecoDto);
 
-            if(enderecoDtoReturn == null)
+            if(result.IsFailed)
             {
                 return NotFound();
             }
@@ -72,9 +73,9 @@ namespace FilmesAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeletarEndereco(int id)
         {
-            EnderecoDto enderecoDto = _enderecoService.DeletarEndereco(id);
+            Result result = _enderecoService.DeletarEndereco(id);
 
-            if(enderecoDto == null)
+            if(result.IsFailed)
             {
                 return NotFound();
             }
